@@ -1,14 +1,22 @@
-# SCOPE DEMO
+# SCOPE Mobile
 
-Public, synthetic demonstration of **SCOPE — Supply Compliance Operational Performance Environment**.
+SCOPE Mobile is a **separate companion product** for field receiving capture. It is not the authoritative SCOPE application.
 
-This repository is intentionally separate from the operational/private SCOPE repository.
+## MVP
 
-## Rules
+- Camera barcode scanning where the browser supports the Barcode Detection API.
+- Manual fallback entry.
+- Raw barcode preservation.
+- Conservative auto-extraction only for explicitly labeled SDN, TCN, and NIIN values.
+- Quantity, condition code, package count, and notes.
+- Batch capture with edit/delete and duplicate warnings.
+- IndexedDB persistence on the device.
+- Offline-capable PWA.
+- Portable `.scopepkg` export/share.
+- Human-readable package JSON preview.
 
-- Synthetic demonstration data only.
-- No CUI, PII, operational unit records, signed forms, or real workspace backups.
-- Do not use this build as the authoritative operational application.
-- GitHub Pages is used only to make the showcase accessible from phones and browsers.
+## Boundary
 
-The production SCOPE codebase remains private and separate.
+Operational SCOPE remains the system of record. Mobile records export with `AWAITING_DASF_MATCH`. Desktop SCOPE must validate the package, compare identifiers against the current DASF, show matched/unmatched/conflict results, and require review before creating receiving records.
+
+No CUI, PII, operational unit data, signed forms, or real workspace backups should be committed to this public repository.
