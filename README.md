@@ -20,3 +20,22 @@ SCOPE Mobile is a **separate companion product** for field receiving capture. It
 Operational SCOPE remains the system of record. Mobile records export with `AWAITING_DASF_MATCH`. Desktop SCOPE must validate the package, compare identifiers against the current DASF, show matched/unmatched/conflict results, and require review before creating receiving records.
 
 No CUI, PII, operational unit data, signed forms, or real workspace backups should be committed to this public repository.
+
+## v0.3.0 Operations Console
+
+The receiving interface now has a centered gold version of the real SCOPE emblem,
+a three-stage workspace, dimensional camera/photo controls, grouped inset fields,
+local draft cards and a dedicated handoff panel. All package and DASF validation
+boundaries remain intact. Barcode decoder 2.3.8 is bundled under `vendor/` with its
+license so offline startup does not depend on a third-party CDN.
+
+Home Screen assets exist at 180, 192 and 512 pixels. `scope-logo-180.png` remains the
+original artwork. `tools/render_brand.py` deterministically recolors the original
+high-resolution desktop artwork; it never creates a replacement emblem.
+
+Browser regression: `npm install`, `npx playwright install chromium`, then
+`npm test`. Optionally set `SCOPE_CHROMIUM` to an installed Chromium executable.
+Tests use a disposable local origin and synthetic labels, never live receiving data.
+
+Physical iPhone camera, share sheet, Add to Home Screen and government desktop
+import/CAC acceptance remain device/environment checks.

@@ -3,34 +3,43 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#08131c">
+<meta name="theme-color" content="#040d1a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SCOPE Mobile">
 <link rel="manifest" href="./manifest.webmanifest">
-<link rel="icon" href="./icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" sizes="180x180" href="./scope-logo-180.png?v=0.1.5">
+<link rel="icon" href="./scope-icon-192.png?v=0.3.0" type="image/png">
+<link rel="apple-touch-icon" sizes="180x180" href="./scope-icon-180.png?v=0.3.0">
 <title>SCOPE Mobile</title>
-<link rel="stylesheet" href="./styles.css?v=0.2.0">
+<link rel="stylesheet" href="./styles.css?v=0.3.0">
 </head>
 <body>
+<svg class="symbol-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+<symbol id="i-scan" viewBox="0 0 24 24"><path d="M8 3H4a1 1 0 0 0-1 1v4m13-5h4a1 1 0 0 1 1 1v4M3 16v4a1 1 0 0 0 1 1h4m8 0h4a1 1 0 0 0 1-1v-4M7 8v8m3-8v8m4-8v8m3-8v8M5 12h14"/></symbol>
+<symbol id="i-photo" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8" cy="9" r="1.5"/><path d="m4 18 6-6 4 4 3-3 4 5"/></symbol>
+<symbol id="i-box" viewBox="0 0 24 24"><path d="m12 3 9 5v8l-9 5-9-5V8l9-5Zm0 10v8M3 8l9 5 9-5M8 5l9 5v5"/></symbol>
+<symbol id="i-send" viewBox="0 0 24 24"><path d="m3 10 18-7-7 18-4-7-7-4Zm7 4L21 3"/></symbol>
+</defs></svg>
 <header>
   <div class="brand-lockup">
-    <img class="brand-logo" src="./scope-logo-180.png?v=0.1.5" alt="SCOPE">
+    <div class="brand-badge"><img class="brand-logo" src="./scope-emblem-gold.png?v=0.3.0" alt="SCOPE emblem"></div>
     <div>
-      <h1>SCOPE Mobile <small>v0.2.1</small></h1>
-      <p>Receiving-floor companion for operational SCOPE</p>
+      <span class="eyebrow">RECEIVING OPERATIONS</span>
+      <h1>SCOPE <span>Mobile</span></h1>
+      <p>Receiving-floor companion <small>v0.3.0</small></p>
     </div>
   </div>
   <span id="offlineBadge" class="badge">Ready</span>
 </header>
 
 <main>
+<nav class="workspace-nav" aria-label="Workspace"><a aria-current="location" href="#capture">01 <span>Capture</span></a><a href="#batch">02 <span>Batch</span></a><a href="#handoff">03 <span>Handoff</span></a></nav>
 <section id="capture" class="panel">
   <div class="section-head">
-    <div><h2>Capture Receipt</h2><p>Scan first. Fill only what you can verify physically.</p></div>
-    <div class="scan-actions"><button id="scanBtn" class="primary">Scan Barcode</button><button id="photoScanBtn">Scan Photo</button></div>
+    <div><span class="eyebrow">01 / FIELD CAPTURE</span><h2>Capture Receipt</h2><p>Scan first. Verify before saving.</p></div>
+    <span class="section-icon"><svg><use href="#i-scan"/></svg></span>
   </div>
+  <div class="scan-actions"><button id="scanBtn" class="primary scan-control"><svg aria-hidden="true"><use href="#i-scan"/></svg><span>Scan Barcode</span><small>Use camera</small></button><button id="photoScanBtn" class="scan-control"><svg aria-hidden="true"><use href="#i-photo"/></svg><span>Scan Photo</span><small>Use label image</small></button></div>
 
   <div id="cameraWrap" class="camera hidden">
     <video id="camera" playsinline muted></video>
@@ -42,21 +51,23 @@
   </div>
 
   <input id="photoScanInput" class="hidden" type="file" accept="image/*" capture="environment">
-  <div id="scanStatus" class="notice hidden"></div>
+  <div id="scanStatus" class="notice hidden" role="status" aria-live="polite"></div>
 
   <div class="form-grid">
     <label class="wide">Raw barcode / label value
-      <textarea id="barcodeRaw" rows="2" placeholder="Scanned value appears here. Manual entry is allowed."></textarea>
+      <textarea id="barcodeRaw" rows="2" placeholder="Scan a label or enter its value"></textarea>
     </label>
-    <label>SDN
+    <div class="field-heading wide"><span>Shipment identifiers</span><span>Verify on label</span></div>
+    <label class="identifier">SDN
       <input id="sdn" autocomplete="off" placeholder="If known">
     </label>
-    <label>TCN
+    <label class="identifier">TCN
       <input id="tcn" autocomplete="off" placeholder="Optional">
     </label>
-    <label>NIIN
+    <label class="identifier">NIIN
       <input id="niin" inputmode="numeric" autocomplete="off" placeholder="If known">
     </label>
+    <div class="field-heading wide"><span>Receipt details</span><span>Physical count</span></div>
     <label>Quantity received
       <input id="qty" type="number" min="0" step="1" inputmode="numeric" placeholder="0">
     </label>
@@ -67,7 +78,7 @@
       <input id="packages" type="number" min="0" step="1" inputmode="numeric" placeholder="Optional">
     </label>
     <label class="wide">Notes
-      <textarea id="notes" rows="3" placeholder="Visible damage, split shipment, carton count, or other receiving-floor notes."></textarea>
+      <textarea id="notes" rows="2" placeholder="Damage, split shipment, or receiving notes"></textarea>
     </label>
   </div>
 
@@ -77,22 +88,22 @@
   </div>
 </section>
 
-<section class="panel">
+<section id="batch" class="panel batch-panel">
   <div class="section-head">
-    <div><h2>Current Batch</h2><p><span id="batchCount">0</span> draft receipt(s) awaiting desktop SCOPE.</p></div>
+    <div><span class="eyebrow">02 / LOCAL DRAFTS</span><h2>Current Batch <span id="batchCount" class="count">0</span></h2><p>Awaiting operational SCOPE.</p></div>
     <button id="newBatchBtn" class="danger-ghost">Clear Batch</button>
   </div>
-  <div id="emptyState" class="empty">No receipts captured yet.</div>
+  <div id="emptyState" class="empty"><svg aria-hidden="true"><use href="#i-box"/></svg><b>Your batch starts here</b><span>Capture a receipt to save a draft on this device.</span></div>
   <div id="batchList"></div>
 </section>
 
-<section class="panel">
+<section id="handoff" class="panel handoff-panel">
   <div class="section-head">
-    <div><h2>Handoff</h2><p>Export a portable package for import into operational SCOPE.</p></div>
+    <div><span class="eyebrow">03 / DESKTOP TRANSFER</span><h2>Handoff</h2><p>Transfer your batch to operational SCOPE.</p></div><span class="section-icon"><svg><use href="#i-send"/></svg></span>
   </div>
   <div class="handoff-grid">
+    <button id="exportBtn" class="primary"><svg aria-hidden="true"><use href="#i-send"/></svg>Export / Share .scopepkg</button>
     <button id="previewBtn">View Package JSON</button>
-    <button id="exportBtn" class="primary">Export / Share .scopepkg</button>
   </div>
   <div class="notice">Operational SCOPE remains the system of record. Imported drafts must be validated and matched against the current DASF before becoming receiving records.</div>
 </section>
@@ -109,6 +120,7 @@
       <div class="receipt-title"></div>
       <div class="receipt-meta"></div>
       <div class="receipt-note"></div>
+      <div class="match-status">Awaiting DASF match</div>
     </div>
     <div class="row-actions">
       <button data-action="edit">Edit</button>
@@ -117,7 +129,8 @@
   </article>
 </template>
 
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-<script src="./app.js?v=0.2.0"></script>
+<script src="./vendor/html5-qrcode.min.js?v=2.3.8"></script>
+<script src="./app.js?v=0.3.0"></script>
+<script src="./console-ui.js?v=0.3.0"></script>
 </body>
 </html>

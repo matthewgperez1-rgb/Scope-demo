@@ -1,4 +1,4 @@
-const APP_VERSION='0.2.1';
+const APP_VERSION='0.3.0';
 const PACKAGE_VERSION='1.0';
 const DB_NAME='scope-mobile-v1';
 const STORE='receipts';
@@ -109,7 +109,7 @@ async function edit(id){
  editingId=id;
  $('barcodeRaw').value=r.barcodeRaw||'';$('sdn').value=r.sdn||'';$('tcn').value=r.tcn||'';$('niin').value=r.niin||'';
  $('qty').value=r.qtyReceived??'';$('condition').value=r.conditionCode||'';$('packages').value=r.packageCount??'';$('notes').value=r.notes||'';
- $('saveBtn').textContent='Update Draft';window.scrollTo({top:0,behavior:'smooth'});
+ $('saveBtn').textContent='Update Draft';window.scrollTo({top:0,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
 }
 async function sha256(text){
  const bytes=new TextEncoder().encode(text);const digest=await crypto.subtle.digest('SHA-256',bytes);
