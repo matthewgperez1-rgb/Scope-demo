@@ -1,11 +1,19 @@
 {
-  "name":"SCOPE Mobile",
-  "short_name":"SCOPE Mobile",
-  "description":"Field-capture companion for operational SCOPE.",
-  "start_url":"./",
-  "scope":"./",
-  "display":"standalone",
-  "background_color":"#071018",
-  "theme_color":"#08131c",
-  "icons":[{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+  "name": "SCOPE Mobile",
+  "short_name": "SCOPE Mobile",
+  "description": "Field-capture companion for operational SCOPE.",
+  "start_url": "./?v=0.1.1",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#071018",
+  "theme_color": "#08131c",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "id": "./scope-mobile"
 }
