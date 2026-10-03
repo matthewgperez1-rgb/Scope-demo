@@ -15,6 +15,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+      - name: Build SCOPE logo PNG assets
+        run: |
+          base64 --decode scope-logo.b64 > scope-logo-source.png
+          python -m pip install --quiet Pillow
+          python - <<'PY'
+          from PIL import Image
+          img=Image.open("scope-logo-source.png").convert("RGBA")
+          bg=(8,19,28,255)
+          for size in (180,192,512):
+              inner=size-20
+              work=img.copy()
+              work.thumbnail((inner,inner),Image.Resampling.LANCZOS)
+              canvas=Image.new("RGBA",(size,size),bg)
+              canvas.alpha_composite(work,((size-work.width)//2,(size-work.height)//2))
+              canvas.save(f"scope-logo-{size}.png",optimize=True)
+          PY
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
