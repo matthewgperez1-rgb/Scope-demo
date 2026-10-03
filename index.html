@@ -29,7 +29,7 @@
 <section id="capture" class="panel">
   <div class="section-head">
     <div><h2>Capture Receipt</h2><p>Scan first. Fill only what you can verify physically.</p></div>
-    <button id="scanBtn" class="primary">Scan Barcode</button>
+    <div class="scan-actions"><button id="scanBtn" class="primary">Scan Barcode</button><button id="photoScanBtn">Scan Photo</button></div>
   </div>
 
   <div id="cameraWrap" class="camera hidden">
@@ -41,6 +41,7 @@
     </div>
   </div>
 
+  <input id="photoScanInput" class="hidden" type="file" accept="image/*" capture="environment">
   <div id="scanStatus" class="notice hidden"></div>
 
   <div class="form-grid">
