@@ -1,4 +1,4 @@
-const APP_VERSION='0.1.5';
+const APP_VERSION='0.2.0';
 const PACKAGE_VERSION='1.0';
 const DB_NAME='scope-mobile-v1';
 const STORE='receipts';
