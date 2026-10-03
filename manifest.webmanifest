@@ -2,7 +2,7 @@
   "name": "SCOPE Mobile",
   "short_name": "SCOPE Mobile",
   "description": "Field-capture companion for operational SCOPE.",
-  "start_url": "./?v=0.1.1",
+  "start_url": "./?v=0.1.2",
   "scope": "./",
   "display": "standalone",
   "background_color": "#071018",
