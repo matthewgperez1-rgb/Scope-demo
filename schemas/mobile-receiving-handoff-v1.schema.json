@@ -1,0 +1,38 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://scope-mobile.example/schemas/mobile-receiving-handoff-v1.schema.json",
+  "title":"SCOPE Mobile Receiving Handoff",
+  "type":"object",
+  "required":["packageVersion","packageType","sourceApp","exportedAt","recordCount","records","recordsSha256"],
+  "properties":{
+    "packageVersion":{"const":"1.0"},
+    "packageType":{"const":"mobile-receiving-handoff"},
+    "sourceApp":{"const":"SCOPE Mobile"},
+    "sourceAppVersion":{"type":"string"},
+    "exportedAt":{"type":"string","format":"date-time"},
+    "recordCount":{"type":"integer","minimum":0},
+    "recordsSha256":{"type":"string","pattern":"^[a-f0-9]{64}$"},
+    "records":{
+      "type":"array",
+      "items":{
+        "type":"object",
+        "required":["id","capturedAt","source","matchStatus"],
+        "properties":{
+          "id":{"type":"string"},
+          "barcodeRaw":{"type":"string"},
+          "sdn":{"type":"string"},
+          "tcn":{"type":"string"},
+          "niin":{"type":"string"},
+          "qtyReceived":{"type":["number","null"],"minimum":0},
+          "conditionCode":{"type":"string"},
+          "packageCount":{"type":["number","null"],"minimum":0},
+          "notes":{"type":"string"},
+          "capturedAt":{"type":"string","format":"date-time"},
+          "updatedAt":{"type":"string","format":"date-time"},
+          "source":{"const":"SCOPE_MOBILE"},
+          "matchStatus":{"const":"AWAITING_DASF_MATCH"}
+        }
+      }
+    }
+  }
+}
