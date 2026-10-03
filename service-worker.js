@@ -1,5 +1,5 @@
-const CACHE='scope-mobile-v0.1.4';
-const CORE=['./','./index.html','./styles.css?v=0.1.4','./app.js?v=0.1.4','./manifest.webmanifest','./scope-logo-180.png?v=0.1.4','./scope-logo-192.png?v=0.1.4','./scope-logo-512.png?v=0.1.4'];
+const CACHE='scope-mobile-v0.1.5';
+const CORE=['./','./index.html','./styles.css?v=0.1.5','./app.js?v=0.1.5','./manifest.webmanifest','./scope-logo-180.png?v=0.1.5'];
 
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));
