@@ -1,4 +1,4 @@
-const APP_VERSION='0.1.0';
+const APP_VERSION='0.1.2';
 const PACKAGE_VERSION='1.0';
 const DB_NAME='scope-mobile-v1';
 const STORE='receipts';
@@ -134,31 +134,95 @@ async function exportPackage(){
  }
  const a=document.createElement('a');a.href=URL.createObjectURL(file);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
-async function startScan(){
- if(!('BarcodeDetector' in window)){
-  showNotice('Automatic barcode detection is not available in this browser. Use the camera outside the app and paste/type the barcode value, or use manual entry.','warn');
-  return;
- }
- try{
-  detector=new BarcodeDetector({formats:['code_128','code_39','qr_code','data_matrix','itf','codabar','ean_13','ean_8','upc_a','upc_e']});
-  stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});
-  $('camera').srcObject=stream;await $('camera').play();$('cameraWrap').classList.remove('hidden');scanning=true;scanLoop();
- }catch(e){showNotice('Camera could not start: '+e.message,'bad')}
+async function captureBarcode(raw){
+ raw=String(raw||'').trim();
+ if(!raw)return;
+ $('barcodeRaw').value=raw;
+ autoExtract(raw);
+ await stopScan();
+ showNotice('Barcode captured. Verify the identifiers, quantity, and condition before saving.','');
 }
-async function scanLoop(){
- if(!scanning||!detector)return;
+
+async function startHtml5Scan(){
+ html5Scanner=new Html5Qrcode('reader',false);
+ scannerMode='html5';
+ $('cameraWrap').classList.remove('hidden');
+ $('reader').classList.remove('hidden');
+ $('camera').classList.add('hidden');
+ $('scanBox').classList.add('hidden');
+ scanning=true;
+ await html5Scanner.start(
+  {facingMode:'environment'},
+  {fps:12,qrbox:(w,h)=>({width:Math.floor(w*.88),height:Math.max(100,Math.floor(h*.34))}),aspectRatio:1.333334},
+  decodedText=>captureBarcode(decodedText),
+  ()=>{}
+ );
+}
+
+async function startNativeScan(){
+ detector=new BarcodeDetector({formats:['code_128','code_39','code_93','qr_code','data_matrix','itf','codabar','ean_13','ean_8','upc_a','upc_e']});
+ stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});
+ scannerMode='native';
+ $('camera').srcObject=stream;
+ $('reader').classList.add('hidden');
+ $('camera').classList.remove('hidden');
+ $('scanBox').classList.remove('hidden');
+ $('cameraWrap').classList.remove('hidden');
+ await $('camera').play();
+ scanning=true;
+ scanLoop();
+}
+
+async function startScan(){
+ showNotice('Starting rear camera…','');
  try{
-  const codes=await detector.detect($('camera'));
-  if(codes.length){
-   const raw=codes[0].rawValue||'';$('barcodeRaw').value=raw;autoExtract(raw);stopScan();
-   showNotice('Barcode captured. Verify the identifiers, quantity, and condition before saving.','');
+  if(window.Html5Qrcode){
+   await startHtml5Scan();
+   showNotice('Camera ready. Hold the barcode inside the scan area.','');
    return;
   }
+  if('BarcodeDetector' in window){
+   await startNativeScan();
+   showNotice('Camera ready. Hold the barcode inside the scan area.','');
+   return;
+  }
+  showNotice('The scanner component did not load. Open SCOPE Mobile once while online, then try again. Manual entry remains available.','warn');
+ }catch(e){
+  console.error(e);
+  await stopScan();
+  const name=e?.name||'';
+  if(name==='NotAllowedError'||/permission|denied/i.test(String(e?.message||e))){
+   showNotice('Camera permission was denied. Allow camera access for this site in iPhone Settings/Safari, then tap Scan Barcode again.','bad');
+  }else if(name==='NotFoundError'){
+   showNotice('No usable camera was found on this device.','bad');
+  }else{
+   showNotice('Camera could not start: '+(e?.message||e),'bad');
+  }
+ }
+}
+async function scanLoop(){
+ if(!scanning||!detector||scannerMode!=='native')return;
+ try{
+  const codes=await detector.detect($('camera'));
+  if(codes.length){await captureBarcode(codes[0].rawValue||'');return;}
  }catch(e){}
  requestAnimationFrame(scanLoop);
 }
-function stopScan(){
- scanning=false;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$('cameraWrap').classList.add('hidden');
+async function stopScan(){
+ scanning=false;
+ if(html5Scanner){
+  try{if(html5Scanner.isScanning)await html5Scanner.stop()}catch(e){}
+  try{html5Scanner.clear()}catch(e){}
+  html5Scanner=null;
+ }
+ if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}
+ detector=null;scannerMode=null;
+ $('camera').srcObject=null;
+ $('reader').innerHTML='';
+ $('reader').classList.add('hidden');
+ $('camera').classList.remove('hidden');
+ $('scanBox').classList.remove('hidden');
+ $('cameraWrap').classList.add('hidden');
 }
 function setConnectivity(){
  $('offlineBadge').textContent=navigator.onLine?'Online / Offline-ready':'Offline';
