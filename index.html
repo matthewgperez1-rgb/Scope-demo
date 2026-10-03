@@ -3,118 +3,115 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b1720">
+<meta name="theme-color" content="#08131c">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="SCOPE DEMO">
+<meta name="apple-mobile-web-app-title" content="SCOPE Mobile">
 <link rel="manifest" href="./manifest.webmanifest">
-<title>SCOPE DEMO</title>
-<style>
-:root{--bg:#071018;--panel:#0d1b26;--panel2:#102433;--line:#203746;--text:#eef5f8;--muted:#9fb2bf;--accent:#7bc1e5;--good:#65c88a;--warn:#f2c66d;--bad:#ef7d7d}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#071018,#0b1720 48%,#08131b);color:var(--text);font:14px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-.demo{position:sticky;top:0;z-index:50;background:#8b1e1e;padding:7px 12px;text-align:center;font-size:11px;font-weight:800;letter-spacing:.08em}
-header{padding:18px 18px 10px;border-bottom:1px solid var(--line);background:rgba(7,16,24,.94);backdrop-filter:blur(12px);position:sticky;top:29px;z-index:40}
-.brand{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand h1{font-size:22px;margin:0;letter-spacing:.02em}.brand small{color:var(--muted)}
-.badge{padding:5px 9px;border:1px solid var(--line);border-radius:999px;color:var(--accent);font-size:11px;font-weight:700}
-nav{display:flex;gap:8px;overflow:auto;padding:12px 0 2px;scrollbar-width:none}nav button{border:1px solid var(--line);background:#0b1822;color:var(--muted);padding:9px 12px;border-radius:10px;white-space:nowrap;font-weight:700}nav button.active{background:#163247;color:white;border-color:#31566d}
-main{max-width:1050px;margin:auto;padding:16px}.view{display:none}.view.active{display:block}
-.hero{background:linear-gradient(135deg,#112a3a,#0b1822);border:1px solid #294354;border-radius:16px;padding:18px;margin-bottom:14px}.hero h2{font-size:24px;margin:0 0 6px}.hero p{color:var(--muted);margin:0}
-.grid{display:grid;gap:12px}.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}.card{background:linear-gradient(180deg,var(--panel),#0b1720);border:1px solid var(--line);border-radius:14px;padding:14px}.kpi .n{font-size:27px;font-weight:800;margin:4px 0}.kpi small,.muted{color:var(--muted)}
-.good{color:var(--good)}.warn{color:var(--warn)}.bad{color:var(--bad)}
-.section-title{display:flex;justify-content:space-between;align-items:center;margin:18px 0 10px}.section-title h3{margin:0;font-size:17px}
-table{width:100%;border-collapse:collapse;min-width:700px}th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);font-size:12px}th{color:#b9c8d1}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}
-.pill{display:inline-block;padding:3px 7px;border-radius:999px;background:#162a38;border:1px solid #294354;font-size:10px;font-weight:800}.pill.bad{background:#3a1c1c;border-color:#653535}.pill.warn{background:#392e18;border-color:#66522a}.pill.good{background:#173222;border-color:#2d5a3d}
-.row{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line)}.row:last-child{border:0}.row strong{display:block}.row small{color:var(--muted)}
-button.action{border:1px solid #32536a;background:#163247;color:white;padding:8px 11px;border-radius:9px;font-weight:700}
-.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px}.step{padding:10px;border:1px solid var(--line);border-radius:10px;background:#0b1822;text-align:center;font-size:11px}.step.done{border-color:#315f43;background:#122c1d}.step.current{border-color:#7d6531;background:#332a17}
-.notice{border-left:3px solid var(--accent);padding:10px 12px;background:#0f202c;border-radius:8px;color:#cbd8df;margin:12px 0}
-footer{text-align:center;color:#6f8492;padding:32px 16px 46px;font-size:11px}
-@media(max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}.flow{grid-template-columns:1fr}.brand h1{font-size:19px}.hero h2{font-size:21px}main{padding:12px}}
-</style>
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<title>SCOPE Mobile</title>
+<link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-<div class="demo">SCOPE DEMO · SYNTHETIC DATA ONLY · NOT FOR OPERATIONAL USE</div>
+<div class="demo">SCOPE MOBILE · FIELD CAPTURE · NO AUTHORITATIVE DASF MATCH ON DEVICE</div>
 <header>
- <div class="brand"><div><h1>SCOPE</h1><small>Supply Compliance Operational Performance Environment</small></div><span class="badge">DEMO</span></div>
- <nav id="nav">
-  <button class="active" data-view="dashboard">Dashboard</button>
-  <button data-view="dasf">DASF</button>
-  <button data-view="smu">SMU Stock</button>
-  <button data-view="receiving">Receiving</button>
-  <button data-view="doa">DOA</button>
-  <button data-view="cmr">CMR</button>
- </nav>
+  <div>
+    <h1>SCOPE Mobile</h1>
+    <p>Receiving-floor companion for operational SCOPE</p>
+  </div>
+  <span id="offlineBadge" class="badge">Ready</span>
 </header>
+
 <main>
-<section id="dashboard" class="view active">
- <div class="hero"><h2>What needs to happen next?</h2><p>Demonstration workspace using fictional unit and transaction data.</p></div>
- <div class="grid kpis">
-  <div class="card kpi"><small>Receiptable DASF</small><div class="n">12</div><span class="good">6 current</span></div>
-  <div class="card kpi"><small>1-Day</small><div class="n">3</div><span class="warn">Review today</span></div>
-  <div class="card kpi"><small>2-Day</small><div class="n">3</div><span class="bad">Action required</span></div>
-  <div class="card kpi"><small>SMU Opportunities</small><div class="n">4</div><span class="good">Local stock available</span></div>
- </div>
- <div class="section-title"><h3>Priority actions</h3></div>
- <div class="card">
-  <div class="row"><div><strong>W91DEMO260001</strong><small>D6T received · issue to commodity due today</small></div><button class="action" data-go="receiving">Open</button></div>
-  <div class="row"><div><strong>W91DEMO260014</strong><small>B7 price change · verify obligation</small></div><button class="action" data-go="dasf">Review</button></div>
-  <div class="row"><div><strong>NIIN 012345678</strong><small>Requested from DLA · MML100 has 6 on hand</small></div><button class="action" data-go="smu">View</button></div>
- </div>
+<section id="capture" class="panel">
+  <div class="section-head">
+    <div><h2>Capture Receipt</h2><p>Scan first. Fill only what you can verify physically.</p></div>
+    <button id="scanBtn" class="primary">Scan Barcode</button>
+  </div>
+
+  <div id="cameraWrap" class="camera hidden">
+    <video id="camera" playsinline muted></video>
+    <div class="scan-box"></div>
+    <div class="camera-actions">
+      <button id="stopScanBtn">Stop</button>
+    </div>
+  </div>
+
+  <div id="scanStatus" class="notice hidden"></div>
+
+  <div class="form-grid">
+    <label class="wide">Raw barcode / label value
+      <textarea id="barcodeRaw" rows="2" placeholder="Scanned value appears here. Manual entry is allowed."></textarea>
+    </label>
+    <label>SDN
+      <input id="sdn" autocomplete="off" placeholder="If known">
+    </label>
+    <label>TCN
+      <input id="tcn" autocomplete="off" placeholder="Optional">
+    </label>
+    <label>NIIN
+      <input id="niin" inputmode="numeric" autocomplete="off" placeholder="If known">
+    </label>
+    <label>Quantity received
+      <input id="qty" type="number" min="0" step="1" inputmode="numeric" placeholder="0">
+    </label>
+    <label>Condition code
+      <input id="condition" maxlength="2" autocomplete="off" placeholder="e.g. A">
+    </label>
+    <label>Packages / containers
+      <input id="packages" type="number" min="0" step="1" inputmode="numeric" placeholder="Optional">
+    </label>
+    <label class="wide">Notes
+      <textarea id="notes" rows="3" placeholder="Visible damage, split shipment, carton count, or other receiving-floor notes."></textarea>
+    </label>
+  </div>
+
+  <div class="actions">
+    <button id="clearBtn">Clear</button>
+    <button id="saveBtn" class="primary">Add to Batch</button>
+  </div>
 </section>
 
-<section id="dasf" class="view">
- <div class="hero"><h2>DASF</h2><p>Receiptable requisitions, aging, supply status and SDN history.</p></div>
- <div class="table-wrap"><table><thead><tr><th>SDN</th><th>NIIN</th><th>Status</th><th>Age</th><th>Qty</th><th>Action</th></tr></thead><tbody>
- <tr><td>W91DEMO260014</td><td>012345678</td><td><span class="pill warn">B7</span></td><td>1 day</td><td>4</td><td>Verify price change</td></tr>
- <tr><td>W91DEMO260021</td><td>009876543</td><td><span class="pill bad">AS1</span></td><td>19 days</td><td>2</td><td>Follow up / source review</td></tr>
- <tr><td>W91DEMO260033</td><td>001122334</td><td><span class="pill good">BA</span></td><td>Current</td><td>1</td><td>Monitor</td></tr>
- </tbody></table></div>
- <div class="notice"><b>SDN history:</b> W91DEMO260014 progressed through requisition, source acknowledgment and B7 unit-price update. Demo values are fabricated.</div>
+<section class="panel">
+  <div class="section-head">
+    <div><h2>Current Batch</h2><p><span id="batchCount">0</span> draft receipt(s) awaiting desktop SCOPE.</p></div>
+    <button id="newBatchBtn" class="danger-ghost">Clear Batch</button>
+  </div>
+  <div id="emptyState" class="empty">No receipts captured yet.</div>
+  <div id="batchList"></div>
 </section>
 
-<section id="smu" class="view">
- <div class="hero"><h2>SMU Stock Opportunities</h2><p>Identify requisitions where a co-located SMU shows positive on-hand quantity.</p></div>
- <div class="card">
-  <div class="row"><div><strong>W91DEMO260014 · NIIN 012345678</strong><small>Current SOS: DLA · MML100 on hand: 6 · Requested: 4</small></div><span class="pill good">Candidate</span></div>
-  <div class="row"><div><strong>W91DEMO260040 · NIIN 005551234</strong><small>Current SOS: GSA · MMR100 on hand: 3 · Requested: 1</small></div><span class="pill good">Candidate</span></div>
-  <div class="row"><div><strong>W91DEMO260052 · NIIN 007770009</strong><small>LKH indicates local availability; verify SOS before action</small></div><span class="pill warn">Verify</span></div>
- </div>
-</section>
-
-<section id="receiving" class="view">
- <div class="hero"><h2>Receiving</h2><p>Demonstration of the physical-receipt → D6T → issue → commodity signature → COR workflow.</p></div>
- <div class="card">
-  <strong>W91DEMO260001</strong><div class="muted">Demo Item, 4 received · Condition A</div>
-  <div class="flow"><div class="step done">1<br>Physical Receipt</div><div class="step done">2<br>Receiver Signature</div><div class="step done">3<br>D6T</div><div class="step current">4<br>Issue / Commodity</div><div class="step">5<br>COR / Retain</div></div>
-  <div class="notice">The production application generates the DD1348 package and supports the retained PDF/signature workflow. This showcase does not create or accept official signed documents.</div>
- </div>
-</section>
-
-<section id="doa" class="view">
- <div class="hero"><h2>Delegation of Authority</h2><p>Quarterly RO/SUC authority tracking and recertification visibility.</p></div>
- <div class="grid">
-  <div class="card"><div class="row"><div><strong>SUC 100</strong><small>RO: DEMO USER · Q1 FY27 · Supply Officer signed</small></div><span class="pill good">Active</span></div></div>
-  <div class="card"><div class="row"><div><strong>SUC 200</strong><small>RO: SAMPLE USER · Q1 FY27 · pending Supply Officer signature</small></div><span class="pill warn">Pending</span></div></div>
- </div>
-</section>
-
-<section id="cmr" class="view">
- <div class="hero"><h2>CMR Self-Audit</h2><p>Surface responsibility and custody exceptions before an evaluation.</p></div>
- <div class="grid kpis">
-  <div class="card kpi"><small>NOROF</small><div class="n">2</div></div>
-  <div class="card kpi"><small>NOAOF</small><div class="n">1</div></div>
-  <div class="card kpi"><small>NOSUC</small><div class="n">3</div></div>
-  <div class="card kpi"><small>Total records</small><div class="n">48</div></div>
- </div>
- <div class="notice">All records shown here are fictional and exist only to demonstrate how SCOPE surfaces actionable discrepancies.</div>
+<section class="panel">
+  <div class="section-head">
+    <div><h2>Handoff</h2><p>Export a portable package for import into operational SCOPE.</p></div>
+  </div>
+  <div class="handoff-grid">
+    <button id="previewBtn">View Package JSON</button>
+    <button id="exportBtn" class="primary">Export / Share .scopepkg</button>
+  </div>
+  <div class="notice">Operational SCOPE remains the system of record. Imported drafts must be validated and matched against the current DASF before becoming receiving records.</div>
 </section>
 </main>
-<footer>SCOPE DEMO · Synthetic demonstration workspace · No operational data</footer>
-<script>
-const buttons=[...document.querySelectorAll('#nav button')];
-function show(id){buttons.forEach(b=>b.classList.toggle('active',b.dataset.view===id));document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));window.scrollTo({top:0,behavior:'smooth'})}
-buttons.forEach(b=>b.onclick=()=>show(b.dataset.view));
-document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go));
-if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js'));
-</script>
-</body></html>
+
+<dialog id="jsonDialog">
+  <div class="dialog-head"><h3>Package Details</h3><button id="closeJsonBtn">Close</button></div>
+  <pre id="jsonPreview"></pre>
+</dialog>
+
+<template id="rowTemplate">
+  <article class="receipt-row">
+    <div>
+      <div class="receipt-title"></div>
+      <div class="receipt-meta"></div>
+      <div class="receipt-note"></div>
+    </div>
+    <div class="row-actions">
+      <button data-action="edit">Edit</button>
+      <button data-action="delete" class="danger-ghost">Delete</button>
+    </div>
+  </article>
+</template>
+
+<script src="./app.js"></script>
+</body>
+</html>
