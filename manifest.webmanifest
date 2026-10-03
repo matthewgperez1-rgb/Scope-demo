@@ -1,13 +1,11 @@
 {
-  "name":"SCOPE DEMO",
-  "short_name":"SCOPE DEMO",
-  "description":"Synthetic demonstration of the Supply Compliance Operational Performance Environment.",
+  "name":"SCOPE Mobile",
+  "short_name":"SCOPE Mobile",
+  "description":"Field-capture companion for operational SCOPE.",
   "start_url":"./",
   "scope":"./",
   "display":"standalone",
   "background_color":"#071018",
-  "theme_color":"#0b1720",
-  "icons":[
-    {"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
-  ]
+  "theme_color":"#08131c",
+  "icons":[{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
 }
