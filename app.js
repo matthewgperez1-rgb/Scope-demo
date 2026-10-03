@@ -226,11 +226,31 @@ async function stopScan(){
  $('scanBox').classList.remove('hidden');
  $('cameraWrap').classList.add('hidden');
 }
+
+async function scanPhoto(file){
+ if(!file)return;
+ if(!window.Html5Qrcode){
+  showNotice('The barcode scanner component is not available yet. Open SCOPE Mobile while online and try again.','warn');
+  return;
+ }
+ try{
+  showNotice('Reading barcode from photo…','');
+  const scanner=new Html5Qrcode('reader',false);
+  const result=await scanner.scanFile(file,true);
+  try{scanner.clear()}catch(e){}
+  await captureBarcode(result);
+ }catch(e){
+  console.error(e);
+  showNotice('No barcode was detected in that photo. Try again with the barcode filling most of the frame.','warn');
+ }
+}
 function setConnectivity(){
  $('offlineBadge').textContent=navigator.onLine?'Online / Offline-ready':'Offline';
  $('offlineBadge').style.color=navigator.onLine?'var(--accent)':'var(--warn)';
 }
 $('barcodeRaw').addEventListener('change',e=>autoExtract(e.target.value));
+$('photoScanBtn').onclick=()=>$('photoScanInput').click();
+$('photoScanInput').onchange=async e=>{const file=e.target.files?.[0];await scanPhoto(file);e.target.value='';};
 $('saveBtn').onclick=save;$('clearBtn').onclick=clearForm;$('scanBtn').onclick=startScan;$('stopScanBtn').onclick=stopScan;
 $('previewBtn').onclick=preview;$('exportBtn').onclick=exportPackage;$('closeJsonBtn').onclick=()=>$('jsonDialog').close();
 $('newBatchBtn').onclick=async()=>{if(confirm('Clear every draft in this batch?')){await clearAll();clearForm();await render()}};
