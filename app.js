@@ -6,6 +6,8 @@ let db;
 let editingId=null;
 let stream=null;
 let detector=null;
+let html5Scanner=null;
+let scannerMode=null;
 let scanning=false;
 
 const $=id=>document.getElementById(id);
