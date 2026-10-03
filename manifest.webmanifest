@@ -2,14 +2,14 @@
   "name": "SCOPE Mobile",
   "short_name": "SCOPE Mobile",
   "description": "Field-capture companion for operational SCOPE.",
-  "start_url": "./?v=0.2.0",
+  "start_url": "./?v=0.2.1",
   "scope": "./",
   "display": "standalone",
   "background_color": "#071018",
-  "theme_color": "#08131c",
+  "theme_color": "#050b14",
   "icons": [
     {
-      "src": "./scope-logo-180.png?v=0.2.0",
+      "src": "./scope-logo-180.png?v=0.2.1",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
