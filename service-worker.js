@@ -1,5 +1,5 @@
-const CACHE='scope-mobile-v0.1.1';
-const CORE=['./','./index.html','./styles.css?v=0.1.1','./app.js?v=0.1.1','./manifest.webmanifest','./icon.svg'];
+const CACHE='scope-mobile-v0.1.2';
+const CORE=['./','./index.html','./styles.css?v=0.1.2','./app.js?v=0.1.2','./manifest.webmanifest','./icon.svg'];
 
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));
@@ -15,10 +15,17 @@ self.addEventListener('activate',event=>{
 
 self.addEventListener('fetch',event=>{
   if(event.request.method!=='GET') return;
-
-  const isNavigation=event.request.mode==='navigate';
   const url=new URL(event.request.url);
-  const isAppAsset=url.pathname.endsWith('/index.html') || url.pathname.endsWith('/app.js') || url.pathname.endsWith('/styles.css') || url.pathname.endsWith('/Scope-demo/') || url.pathname.endsWith('/Scope-demo');
+  const isNavigation=event.request.mode==='navigate';
+  const isAppAsset=url.origin===self.location.origin && (
+    url.pathname.endsWith('/index.html') ||
+    url.pathname.endsWith('/app.js') ||
+    url.pathname.endsWith('/styles.css') ||
+    url.pathname.endsWith('/manifest.webmanifest') ||
+    url.pathname.endsWith('/icon.svg') ||
+    url.pathname.endsWith('/Scope-demo/') ||
+    url.pathname.endsWith('/Scope-demo')
+  );
 
   if(isNavigation || isAppAsset){
     event.respondWith(
