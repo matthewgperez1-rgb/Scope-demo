@@ -1,4 +1,4 @@
-const CACHE='scope-mobile-v0.3.1';
+const CACHE='scope-mobile-v0.3.1-r2';
 const CORE=['./','./index.html','./styles.css?v=0.3.1','./app.js?v=0.3.1','./console-ui.js?v=0.3.1','./manifest.webmanifest','./vendor/html5-qrcode.min.js?v=2.3.8','./scope-emblem-gold.png?v=0.3.1','./scope-icon-180.png?v=0.3.1','./scope-icon-192.png?v=0.3.1','./scope-icon-512.png?v=0.3.1'];
 
 self.addEventListener('install',event=>{
