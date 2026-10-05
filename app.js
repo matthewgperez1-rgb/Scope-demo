@@ -35,10 +35,20 @@ function labeledValue(raw,label){
 }
 function autoExtract(raw){
  const patch={};
+ const text=String(raw||'').trim();
  for(const [label,id] of [['SDN','sdn'],['TCN','tcn'],['NIIN','niin']]){
-  const val=labeledValue(raw,label);
+  const val=labeledValue(text,label);
   if(val && !$(id).value)patch[id]=val;
  }
+
+ // DD1348 document-number/SDN barcodes commonly decode as the bare
+ // 14-character document number rather than "SDN: <value>".
+ // Treat an otherwise-unlabeled 14-character alphanumeric payload as an SDN.
+ const compact=text.toUpperCase().replace(/[\s-]+/g,'');
+ if(!patch.sdn && !$('sdn').value && /^[A-Z0-9]{14}$/.test(compact)){
+  patch.sdn=compact;
+ }
+
  Object.entries(patch).forEach(([id,v])=>$(id).value=v);
  return patch;
 }
@@ -155,14 +165,23 @@ async function startHtml5Scan(){
  scanning=true;
  await html5Scanner.start(
   {facingMode:'environment'},
-  {fps:12,qrbox:(w,h)=>({width:Math.floor(w*.88),height:Math.max(100,Math.floor(h*.34))}),aspectRatio:1.333334},
+  {fps:15,qrbox:(w,h)=>({width:Math.floor(w*.94),height:Math.max(120,Math.floor(h*.42))}),aspectRatio:1.777778},
   decodedText=>captureBarcode(decodedText),
   ()=>{}
  );
 }
 
 async function startNativeScan(){
- detector=new BarcodeDetector({formats:['code_128','code_39','code_93','qr_code','data_matrix','itf','codabar','ean_13','ean_8','upc_a','upc_e']});
+ const wanted=['code_128','code_39','code_93','qr_code','data_matrix','itf','codabar','ean_13','ean_8','upc_a','upc_e','pdf417'];
+ let formats=wanted;
+ if(typeof BarcodeDetector.getSupportedFormats==='function'){
+  try{
+   const supported=await BarcodeDetector.getSupportedFormats();
+   const filtered=wanted.filter(x=>supported.includes(x));
+   if(filtered.length)formats=filtered;
+  }catch(e){}
+ }
+ detector=new BarcodeDetector({formats});
  stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});
  scannerMode='native';
  $('camera').srcObject=stream;
