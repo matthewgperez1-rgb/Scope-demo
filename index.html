@@ -8,10 +8,10 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SCOPE Mobile">
 <link rel="manifest" href="./manifest.webmanifest">
-<link rel="icon" href="./scope-icon-192.png?v=0.3.1" type="image/png">
-<link rel="apple-touch-icon" sizes="180x180" href="./scope-icon-180.png?v=0.3.1">
+<link rel="icon" href="./scope-icon-192.png?v=0.4.0" type="image/png">
+<link rel="apple-touch-icon" sizes="180x180" href="./scope-icon-180.png?v=0.4.0">
 <title>SCOPE Mobile</title>
-<link rel="stylesheet" href="./styles.css?v=0.3.1">
+<link rel="stylesheet" href="./styles.css?v=0.4.0">
 </head>
 <body>
 <svg class="symbol-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
@@ -22,11 +22,11 @@
 </defs></svg>
 <header>
   <div class="brand-lockup">
-    <div class="brand-badge"><img class="brand-logo" src="./scope-emblem-gold.png?v=0.3.1" alt="SCOPE emblem"></div>
+    <div class="brand-badge"><img class="brand-logo" src="./scope-emblem-gold.png?v=0.4.0" alt="SCOPE emblem"></div>
     <div>
       <span class="eyebrow">RECEIVING OPERATIONS</span>
       <h1>SCOPE <span>Mobile</span></h1>
-      <p>Receiving-floor companion <small>v0.3.1</small></p>
+      <p>Receiving-floor companion <small>v0.4.0</small></p>
     </div>
   </div>
   <span id="offlineBadge" class="badge">Ready</span>
@@ -52,6 +52,7 @@
 
   <input id="photoScanInput" class="hidden" type="file" accept="image/*" capture="environment">
   <div id="scanStatus" class="notice hidden" role="status" aria-live="polite"></div>
+  <div id="scanDiagnostics" class="notice" role="status" aria-live="polite">Scanner diagnostics will appear here after a scan.</div>
 
   <div class="form-grid">
     <label class="wide">Raw barcode / label value
@@ -130,7 +131,7 @@
 </template>
 
 <script src="./vendor/html5-qrcode.min.js?v=2.3.8"></script>
-<script src="./app.js?v=0.3.1"></script>
-<script src="./console-ui.js?v=0.3.1"></script>
+<script src="./app.js?v=0.4.0"></script>
+<script src="./console-ui.js?v=0.4.0"></script>
 </body>
 </html>
