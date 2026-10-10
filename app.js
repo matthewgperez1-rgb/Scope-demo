@@ -1,4 +1,4 @@
-const APP_VERSION='0.3.1';
+const APP_VERSION='0.4.0';
 const PACKAGE_VERSION='1.0';
 const DB_NAME='scope-mobile-v1';
 const STORE='receipts';
@@ -9,6 +9,11 @@ let detector=null;
 let html5Scanner=null;
 let scannerMode=null;
 let scanning=false;
+let scanStartedAt=0;
+let captureBusy=false;
+let lastCaptureValue='';
+let lastCaptureAt=0;
+function diagnostic(msg){const el=$('scanDiagnostics');if(el)el.textContent=msg;}
 
 const $=id=>document.getElementById(id);
 const fields=['barcodeRaw','sdn','tcn','niin','qty','condition','packages','notes'];
@@ -146,13 +151,18 @@ async function exportPackage(){
  }
  const a=document.createElement('a');a.href=URL.createObjectURL(file);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
-async function captureBarcode(raw){
+async function captureBarcode(raw,format='unknown'){
  raw=String(raw||'').trim();
- if(!raw)return;
+ if(!raw||captureBusy)return;
+ const now=performance.now();
+ if(raw===lastCaptureValue&&now-lastCaptureAt<1800)return;
+ captureBusy=true;lastCaptureValue=raw;lastCaptureAt=now;
+ const elapsed=scanStartedAt?Math.round(now-scanStartedAt):null;
  $('barcodeRaw').value=raw;
- autoExtract(raw);
- await stopScan();
- showNotice('Barcode captured. Verify the identifiers, quantity, and condition before saving.','');
+ const extracted=autoExtract(raw);
+ diagnostic('Decoder: '+format+' · '+(elapsed===null?'photo':elapsed+' ms')+' · '+(extracted.sdn?'SDN extracted':'Verify identifier')+' · '+raw.length+' characters');
+ try{await stopScan();showNotice('Barcode captured. Verify the identifiers, quantity, and condition before saving.','');}
+ finally{captureBusy=false;}
 }
 
 async function startHtml5Scan(){
@@ -165,8 +175,8 @@ async function startHtml5Scan(){
  scanning=true;
  await html5Scanner.start(
   {facingMode:'environment'},
-  {fps:15,qrbox:(w,h)=>({width:Math.floor(w*.94),height:Math.max(120,Math.floor(h*.42))}),aspectRatio:1.777778},
-  decodedText=>captureBarcode(decodedText),
+  {fps:20,qrbox:(w,h)=>({width:Math.floor(w*.96),height:Math.max(110,Math.floor(h*.40))}),aspectRatio:1.777778,videoConstraints:{facingMode:'environment',width:{ideal:1920},height:{ideal:1080}}},
+  (decodedText,result)=>captureBarcode(decodedText,result?.result?.format?.formatName||'html5'),
   ()=>{}
  );
 }
@@ -182,7 +192,7 @@ async function startNativeScan(){
   }catch(e){}
  }
  detector=new BarcodeDetector({formats});
- stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});
+ stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false});
  scannerMode='native';
  $('camera').srcObject=stream;
  $('reader').classList.add('hidden');
@@ -195,16 +205,27 @@ async function startNativeScan(){
 }
 
 async function startScan(){
+ if(scanning)return;
+ scanStartedAt=performance.now();
+ diagnostic('Initializing camera and barcode decoder…');
  showNotice('Starting rear camera…','');
  try{
+  // Native decoder can be faster on supported devices; retain the bundled offline fallback.
+  if('BarcodeDetector' in window){
+   try{
+    const supported=await BarcodeDetector.getSupportedFormats();
+    if(supported.includes('code_128')&&supported.includes('code_39')){
+     await startNativeScan();
+     diagnostic('Native decoder active · camera '+$('camera').videoWidth+'×'+$('camera').videoHeight);
+     showNotice('Camera ready. Hold the barcode inside the scan area.','');
+     return;
+    }
+   }catch(e){console.warn('Native scanner unavailable; using bundled decoder',e);await stopScan();}
+  }
   if(window.Html5Qrcode){
    await startHtml5Scan();
    showNotice('Camera ready. Hold the barcode inside the scan area.','');
-   return;
-  }
-  if('BarcodeDetector' in window){
-   await startNativeScan();
-   showNotice('Camera ready. Hold the barcode inside the scan area.','');
+   diagnostic('Bundled decoder active · move barcode closer until bars are sharp');
    return;
   }
   showNotice('The scanner component did not load. Open SCOPE Mobile once while online, then try again. Manual entry remains available.','warn');
@@ -225,7 +246,7 @@ async function scanLoop(){
  if(!scanning||!detector||scannerMode!=='native')return;
  try{
   const codes=await detector.detect($('camera'));
-  if(codes.length){await captureBarcode(codes[0].rawValue||'');return;}
+  if(codes.length){await captureBarcode(codes[0].rawValue||'',codes[0].format||'native');return;}
  }catch(e){}
  requestAnimationFrame(scanLoop);
 }
@@ -257,7 +278,7 @@ async function scanPhoto(file){
   const scanner=new Html5Qrcode('reader',false);
   const result=await scanner.scanFile(file,true);
   try{scanner.clear()}catch(e){}
-  await captureBarcode(result);
+  await captureBarcode(result,'photo');
  }catch(e){
   console.error(e);
   showNotice('No barcode was detected in that photo. Try again with the barcode filling most of the frame.','warn');
